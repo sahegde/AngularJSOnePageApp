@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <title>Angular JS one page app</title>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular-route.min.js"></script>
+
+</head>
+<body>
+
+
+  <div class="container">
+    <h1>User Manager</h1>
+    <hr />
+    <div class="page"></div>
+  </div>
+
+  <script>
+    function htmlEncode(value){
+      return $('<div/>').text(value).html();
+    }
+    $.fn.serializeObject = function() {
+      var o = {};
+      var a = this.serializeArray();
+      $.each(a, function() {
+          if (o[this.name] !== undefined) {
+              if (!o[this.name].push) {
+                  o[this.name] = [o[this.name]];
+              }
+              o[this.name].push(this.value || '');
+          } else {
+              o[this.name] = this.value || '';
+          }
+      });
+      return o;
+    };
+
+
+    var countryApp = angular.module('myApp', ['ngRoute']);
+
+    countryApp.config(function($routeProvider) {
+      $routeProvider.
+        when('/', {
+          templateUrl: 'home.html',
+          controller: 'CountryListCtrl'
+        }).
+        when('/:new', {
+          templateUrl: 'editUser.html',
+          controller: 'NewUserCtrl'
+        }).
+        when('/:edit/:userid', {
+          templateUrl: 'editUser.html',
+          controller: 'EditUserCtrl'
+        }).
+        otherwise({
+          redirectTo: '/'
+        });
+    });
+
+    countryApp.controller('CountryListCtrl', function ($scope, $http){
+        $http.get('http://backbonejs-beginner.herokuapp.com/users').success(function(data) {
+          $scope.users = data;
+          $('.page').html($('#user-list-template'));
+        });
+    });
+
+    countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams,$http){
+        $http.get('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid).success(function(data) {
+          $scope.user = data;
+          $('.page').html($('#edit-user-template'));
+        });
+    });
+
+    countryApp.controller('NewUserCtrl', function ($scope,$routeParams,$http,$location){
+        $('.page').html($('#edit-user-template'));
+        $scope.doSomething = function() {
+            var details = {
+                firstname: $scope.userFS,
+                lastname : $scope.userLS,
+                age : $scope.userAge
+            };
+            console.log("sandeep "+details);
+            $http.post('http://backbonejs-beginner.herokuapp.com/users',details).success(function(data) {
+              $scope.user = data;
+              $location.path('/');
+            });
+        }
+    });
+
+    countryApp.controller('EditUserCtrl', function ($scope,$routeParams,$http,$location){
+
+        $http.get('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid).success(function(data) {
+          $scope.user = data;
+          $('.page').html($('#edit-user-template'));
+        });
+        $scope.doSomething = function() {
+            var details = {
+                firstname: $scope.userFS,
+                lastname : $scope.userLS,
+                age : $scope.userAge
+            };
+            console.log("sandeep "+details);
+            $http.put('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid,details).success(function(data) {
+              $scope.user = data;
+              $location.path('/');
+            });
+        }
+    });
+
+  </script>
+  <div ng-view></div>
+</body>
+</html> 
+

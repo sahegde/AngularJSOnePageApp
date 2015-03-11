@@ -1,0 +1,17 @@
+  <div id="edit-user-template">
+    <form class="edit-user-form" method="post">
+      <legend>{{user != null ? 'Edit' : 'New'}}  User</legend>
+        <label>First Name</label>
+        <input name="firstname" ng-model="userFS" type="text" value="{{user.firstname}}">
+        <label>Last Name</label>
+        <input name="lastname" ng-model="userLS" type="text" value="{{user.lastname}}">
+        <label>Age</label>
+        <input name="age" type="text" ng-model="userAge" value="{{user.age}}">
+        <hr />
+       <button type="submit" ng-click="doSomething()" class="btn">{{user != null  ? 'Update' : 'Create' }}</button>
+       <span ng-if= "user != null">
+          <input="hidden" name="id" value="{{user.id}}" />
+          <button data-user-id="{{user.id}}" class="btn btn-danger delete">Delete</button>
+       </span>
+    </form>
+  </div>
