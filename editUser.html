@@ -8,10 +8,10 @@
         <label>Age</label>
         <input name="age" type="text" ng-model="userAge" value="{{user.age}}">
         <hr />
-       <button type="submit" ng-click="doSomething()" class="btn">{{user != null  ? 'Update' : 'Create' }}</button>
+       <button type="submit" ng-click="Edit()" class="btn">{{user != null  ? 'Update' : 'Create' }}</button>
        <span ng-if= "user != null">
           <input="hidden" name="id" value="{{user.id}}" />
-          <button data-user-id="{{user.id}}" class="btn btn-danger delete">Delete</button>
+          <button ng-click="Delete()" data-user-id="{{user.id}}" class="btn btn-danger delete">Delete</button>
        </span>
     </form>
   </div>

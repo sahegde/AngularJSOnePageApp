@@ -11,4 +11,4 @@ var port = 8002,
     app = express();
 app.use('/', express.static(__dirname));
 app.listen(port);
-console.log('Now serving http://localhost:'+port+'/index.html');
+console.log('Now serving http://localhost:'+port+'/userAngular.html');

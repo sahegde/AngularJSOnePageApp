@@ -45,7 +45,7 @@
       $routeProvider.
         when('/', {
           templateUrl: 'home.html',
-          controller: 'CountryListCtrl'
+          controller: 'UserListCtrl'
         }).
         when('/:new', {
           templateUrl: 'editUser.html',
@@ -60,23 +60,16 @@
         });
     });
 
-    countryApp.controller('CountryListCtrl', function ($scope, $http){
+    countryApp.controller('UserListCtrl', function ($scope, $http){
         $http.get('http://backbonejs-beginner.herokuapp.com/users').success(function(data) {
           $scope.users = data;
           $('.page').html($('#user-list-template'));
         });
     });
 
-    countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams,$http){
-        $http.get('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid).success(function(data) {
-          $scope.user = data;
-          $('.page').html($('#edit-user-template'));
-        });
-    });
-
     countryApp.controller('NewUserCtrl', function ($scope,$routeParams,$http,$location){
         $('.page').html($('#edit-user-template'));
-        $scope.doSomething = function() {
+        $scope.Edit = function() {
             var details = {
                 firstname: $scope.userFS,
                 lastname : $scope.userLS,
@@ -96,7 +89,8 @@
           $scope.user = data;
           $('.page').html($('#edit-user-template'));
         });
-        $scope.doSomething = function() {
+
+        $scope.Edit = function() {
             var details = {
                 firstname: $scope.userFS,
                 lastname : $scope.userLS,
@@ -104,6 +98,13 @@
             };
             console.log("sandeep "+details);
             $http.put('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid,details).success(function(data) {
+              $scope.user = data;
+              $location.path('/');
+            });
+        };
+
+        $scope.Delete = function() {
+            $http.delete('http://backbonejs-beginner.herokuapp.com/users/'+$routeParams.userid).success(function(data) {
               $scope.user = data;
               $location.path('/');
             });
